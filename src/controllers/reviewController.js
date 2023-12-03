@@ -69,11 +69,18 @@ exports.updateReviewStatus = async (req, res) => {
 };
 
 exports.getReview = async (req, res) => {
-  const { propertyId } = req.query;
+  const { propertyId, limit, offset } = req.query;
 
   try {
-    const mongores = await Reviews.find({ propertyId: propertyId}).limit(5);
-    console.log(mongores);
+    // const mongores = await Reviews.find({ propertyId: propertyId})
+    // .populate("reviewedBy", "name avatar").limit(limit) ;
+
+
+    const totalResults = await Reviews.countDocuments({ propertyId });
+      const mongores = await Reviews.find({ propertyId })
+        .limit(limit)
+        .skip(offset);
+        console.log(mongores);
 
 
     // const goodReviews = await Reviews.find({ propertyId: propertyId, overAllRating: { $gte: 4 } }, { _id: 0, reviewMessage: 1 }).sort({ rating: -1 }).limit(2);
@@ -85,7 +92,7 @@ exports.getReview = async (req, res) => {
       .status(200)
       .json({
         message: "Server Okay, getting The all the reviews",
-        reviws: mongores,
+        reviws: mongores,totalResults
       });
   } catch (err) { 
     console.error(err);

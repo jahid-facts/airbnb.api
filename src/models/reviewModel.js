@@ -6,7 +6,10 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "AllProperty",
     },
-    reviewedBy: String,
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     reviewMessage: String,
     // rating: Number,
     CommunicationRating: Number,
