@@ -12,9 +12,8 @@ require("dotenv").config();
 // Create the Express app
 const app = express();
 
-// Set up port for the server   
-const port = process.env.PORT || 5000;   
-//done somrething 
+// Set up port for the server
+const port = process.env.PORT || 5000;
 
 // Set up database connection URL
 const dbURL =
