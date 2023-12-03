@@ -9,11 +9,8 @@ const { ErrorHandler, handleErrors } = require("./src/utils/errorHandler");
 const pdf = require("html-pdf");
 require("dotenv").config();
 
-const multer = require('multer')
-
 // Create the Express app
 const app = express();
-app.use('/api/assets/images', express.static('assets/images'));
 
 // Set up port for the server
 const port = process.env.PORT || 5000;
@@ -21,22 +18,20 @@ const port = process.env.PORT || 5000;
 // Set up database connection URL
 const dbURL =
   process.env.MONGODB_URL ||
+  // "mongodb+srv://ipsita:Ipsita%402023@uk-bd0.u3pngqk.mongodb.net/airbnb";
   "mongodb+srv://ukbd:MNjqO714lSWx6le5@uk-bd-00.kt2fhlb.mongodb.net/uk-bd";
 
 // Use CORS middleware
-// app.use(
-//   cors({
-//      origin: "*",
-//     // origin: process.env.CORS_ORIGIN,
-//     methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
-//     credentials: true, // Allow cookies to be sent along with requests
-//   })
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
+    credentials: true, // Allow cookies to be sent along with requests
+  })
+);
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
 app.use(helmet());
 app.use(morgan("combined"));
 
@@ -46,10 +41,16 @@ const frontendRoute = require("./src/routes/frontendRoute");
 const propertyRoute = require("./src/routes/propertyRoute");
 const stripePaymentRoute = require("./src/routes/stripePaymentRoute");
 const pdfTemplate = require("./src/documents/pdfTemplate");
+const bookingRoute = require("./src/routes/bookingRoute");
+const reviewRoute = require("./src/routes/reviewRoute"); 
+
+
 app.use("/api", userRoute);
 app.use("/api", frontendRoute);
 app.use("/api", propertyRoute);
 app.use("/api", stripePaymentRoute);
+app.use("/api", bookingRoute);
+app.use("/api",reviewRoute)
 
 // pdf generate and fetch from client
 app.post("/api/create-pdf", (req, res) => {
@@ -59,7 +60,7 @@ app.post("/api/create-pdf", (req, res) => {
     } else {
       res.status(200).send("PDF successfully created");
     }
-  }); 
+  });
 });
 
 app.get("/api/fetch-pdf", (req, res) => {
@@ -67,24 +68,8 @@ app.get("/api/fetch-pdf", (req, res) => {
     if (err) {
       res.status(404).send("PDF not found");
     }
-  }); 
+  });
 });
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    return cb(null, "assets/images/")
-  },
-  filename: function (req, file, cb) {
-    return cb(null, `${Date.now()}_${file.originalname}`)
-  }
-})
-
-const upload = multer({storage})
-
-app.post('/upload', upload.single('file'), (req, res) => {
-  console.log(req.body)
-  console.log(req.file)
-})
 
 //Error handling middleware
 app.use(handleErrors);

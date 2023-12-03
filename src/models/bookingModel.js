@@ -11,20 +11,22 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    renterName: String,
-    renterEmail: String,
-    renterPhoneNumber: Number,
     hostUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    hostName: String,
-    hostEmail: String,
-    hostPhoneNumber: Number,
     propertyId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "AllProperty",
     },
+    renterName: String,
+    renterEmail: String,
+    renterPhoneNumber: Number,
+
+    hostName: String,
+    hostEmail: String,
+    hostPhoneNumber: Number,
+
     startDate: Date,
     endDate: Date,
     stayDays: Number,
@@ -37,6 +39,8 @@ const bookingSchema = new mongoose.Schema(
     country: String,
     postalCode: String,
     status: String,
+    reviewStatus: String,
+    
   },
   {
     timestamps: true,

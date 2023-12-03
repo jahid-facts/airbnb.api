@@ -14,6 +14,7 @@ const {
   changeUserPassword,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/auth");
+
 const {
   studentController,
   studentAddController,
@@ -36,8 +37,6 @@ router.post("/logout", authMiddleware, logoutUser);
 router.put("/update/:id", updateUser);
 router.get("/users", getAllUser);
 router.get("/user/:id", getUserById);
-
-
 router.get("/students", studentController);
 router.post("/add", studentAddController);
 router.delete("/delete/:id", studentDeleteController);
