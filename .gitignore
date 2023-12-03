@@ -1,0 +1,14 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+# .env
+
+# Logs and generated files
+logs/
+dist/
+
+# Operating System files
+Thumbs.db
+.DS_Store
+ 
