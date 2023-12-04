@@ -74,6 +74,7 @@ exports.getRenterBookingData = async (req, res) => {
         _id:1,
         stayDays: 1,
         propertyId: 1,
+        reviewStatus: 1,
       });
 
     res.json(data);

@@ -1,6 +1,8 @@
 const AllProperty = require("../models/propertyModel");
 const User = require("../models/userModel");
+const Wishlists = require("../models/wishlistModel");
 const { resReturn } = require("../utils/responseHelpers");
+
 
 // add property
 exports.addProperty = async (req, res, next) => {
@@ -16,6 +18,47 @@ exports.addProperty = async (req, res, next) => {
     return resReturn(res, 500, { error: error.message });
   }
 };
+
+
+// add wishlists
+exports.addWishlistsProperty = async (req, res, next) => {
+  const { propertyId, userId } = req.body;
+  console.log(propertyId);
+
+  try {
+    const property = await Wishlists.create(req.body);
+
+    // await User.findByIdAndUpdate(
+    //   req.body.userId,
+    //   { type: "host" },
+    //   { new: true }
+    // );
+    return resReturn(res, 201, { property });
+  } catch (error) {
+    return resReturn(res, 500, { error: error.message });
+  }
+};
+
+// find property by use property id
+exports.getWishlistsProperty = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const property = await Wishlists.findById(userId);
+
+    if (!userId) {
+      return resReturn(res, 404, { error: "Property not found in WishLists" });
+    }
+
+    return resReturn(res, 200, { property });
+  } catch (error) {
+    return resReturn(res, 500, { error: error.message });
+  }
+};
+
+
+
+
+
 
 // get all properties
 exports.getAllProperties = async (req, res, next) => {
@@ -58,7 +101,6 @@ exports.getProperty = async (req, res, next) => {
 };
 
 // find property with all details
-
 exports.getPropertyAllDetails = async (req, res, next) => {
   try {
     const propertyId = req.params.id;
