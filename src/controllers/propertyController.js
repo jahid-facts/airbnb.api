@@ -3,7 +3,6 @@ const User = require("../models/userModel");
 const Wishlists = require("../models/wishlistModel");
 const { resReturn } = require("../utils/responseHelpers");
 
-
 // add property
 exports.addProperty = async (req, res, next) => {
   try {
@@ -18,7 +17,6 @@ exports.addProperty = async (req, res, next) => {
     return resReturn(res, 500, { error: error.message });
   }
 };
-
 
 // add wishlists
 exports.addWishlistsProperty = async (req, res, next) => {
@@ -42,10 +40,10 @@ exports.addWishlistsProperty = async (req, res, next) => {
 // find property by use property id
 exports.getWishlistsProperty = async (req, res, next) => {
   try {
-    const {userId} = req.query;
-    console.log(userId) 
-    const property = await Wishlists.find({userId:userId });
-    console.log(property)
+    const { userId } = req.query;
+    console.log(userId);
+    const property = await Wishlists.find({ userId: userId }).populate("propertyId");
+    console.log(property);
 
     if (!property) {
       return resReturn(res, 404, { error: "Property not found in WishLists" });
@@ -54,13 +52,34 @@ exports.getWishlistsProperty = async (req, res, next) => {
     return resReturn(res, 200, { property });
   } catch (error) {
     return resReturn(res, 500, { error: error.message });
-  }properties
+  }
+  properties;
 };
 
+exports.deletePropertyfromWishlist = async (req, res, next) => {
+  //const { userId } = req;
+  const { propertyId, userId } = req.query;
+  console.log(userId);
+  //const { propertyId } = req.params;
+  try {
+    const wishlist = await Wishlists.findOneAndDelete({ userId, propertyId });
+    if (!wishlist){
+      return res.json(" not found");
+    }
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Wishlist deleted successfully",
+        data: wishlist,
+      });
 
-
-
-
+    // res.status(204).send(); // No Content response (HTTP status code 204)
+  } catch (error) {
+    next(error);
+    // Pass the error to the error handling middleware (`errorHandler`) for further processing and response generation.
+  }
+};
 
 // get all properties
 exports.getAllProperties = async (req, res, next) => {
