@@ -42,17 +42,19 @@ exports.addWishlistsProperty = async (req, res, next) => {
 // find property by use property id
 exports.getWishlistsProperty = async (req, res, next) => {
   try {
-    const userId = req.params.userId;
-    const property = await Wishlists.findById(userId);
+    const {userId} = req.query;
+    console.log(userId) 
+    const property = await Wishlists.find({userId:userId });
+    console.log(property)
 
-    if (!userId) {
+    if (!property) {
       return resReturn(res, 404, { error: "Property not found in WishLists" });
     }
 
     return resReturn(res, 200, { property });
   } catch (error) {
     return resReturn(res, 500, { error: error.message });
-  }
+  }properties
 };
 
 

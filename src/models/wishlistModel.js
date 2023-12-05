@@ -5,15 +5,15 @@ const wishlistSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-      propertyId: {
+    propertyId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "AllProperty",
       },
 
 });
 
-const Wishlist = mongoose.model("Wishlists", wishlistSchema);
+const Wishlists = mongoose.model("Wishlists", wishlistSchema);
 
-module.exports = Wishlist;
+module.exports = Wishlists;
 
 

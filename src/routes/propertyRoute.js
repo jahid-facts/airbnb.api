@@ -9,11 +9,13 @@ const {
   getPropertyAllDetails,
   getActiveProperties,
   addWishlistsProperty,
+  getWishlistsProperty,
 } = require("../controllers/propertyController");
 const router = express.Router();
 
 router.post("/add-property", addProperty);
-router.post("/wishlists", addWishlistsProperty);
+router.post("/wishlists", addWishlistsProperty); 
+router.get("/getPropertiesFromWishlist", getWishlistsProperty)
 
 router.get("/getAllProperties", getAllProperties);
 router.get("/getActiveProperties", getActiveProperties);
