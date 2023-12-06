@@ -13,12 +13,12 @@ exports.getBookingData = async (req, res) => {
     const data = await Booking.find({
       hostUserId: userId,
       // propertyId: propertyId,
-      startDate: {
-        $lte: today,
-      },
-      endDate: { 
-        $gte: today,
-      },
+      // startDate: {
+      //   $lte: today,
+      // },
+      // endDate: { 
+      //   $gte: today,
+      // },
     })
       .populate("paymentId", "status createdAt") // populate payment collection fields using
       .populate("propertyId", "title  address.addressLine1 images") // populate property fields  images
@@ -38,7 +38,7 @@ exports.getBookingData = async (req, res) => {
         renterEmail: 1, 
         paymentId: 1,
         propertyId: 1,
-        status: 1,
+       
       });
 
     res.json(data);
