@@ -38,6 +38,10 @@ const propertySchema = new mongoose.Schema(
       type: String,
       default: "In progress",
     },
+    review: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Reviews",
+    },
   },
   {
     timestamps: true,

@@ -42,14 +42,16 @@ exports.getWishlistsProperty = async (req, res, next) => {
   try {
     const { userId } = req.query;
     console.log(userId);
-    const property = await Wishlists.find({ userId: userId }).populate("propertyId");
-    console.log(property);
+    const properties = await Wishlists.find({
+       userId: userId 
+      }).populate("propertyId", "title located images price review");
+    console.log(properties);
 
-    if (!property) {
+    if (!properties) {
       return resReturn(res, 404, { error: "Property not found in WishLists" });
     }
 
-    return resReturn(res, 200, { property });
+    return resReturn(res, 200, { properties });
   } catch (error) {
     return resReturn(res, 500, { error: error.message });
   }
@@ -85,6 +87,7 @@ exports.deletePropertyfromWishlist = async (req, res, next) => {
 exports.getAllProperties = async (req, res, next) => {
   try {
     const properties = await AllProperty.find().populate("placeDescribesId");
+    // const properties = await AllProperty.find().populate("placeDescribesId").populate("review", "overAllRating");
     return resReturn(res, 200, { properties });
   } catch (error) {
     return resReturn(res, 500, { error: error.message });
