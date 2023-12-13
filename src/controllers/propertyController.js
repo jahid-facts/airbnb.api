@@ -160,6 +160,7 @@ exports.updateProperty = async (req, res, next) => {
   try {
     const propertyId = req.params.id;
     const updatedData = req.body;
+    //console.log(updatedData)
 
     // Ensure that userId is not updated (assuming userId should not be changed)
     delete updatedData.userId;

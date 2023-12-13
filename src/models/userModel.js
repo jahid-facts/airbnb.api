@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     },
+    personalInfo:{},
     role: {
       type: String,
       default: "user",
@@ -56,6 +57,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
     }, 
   },
+ 
   {
     timestamps: true,
   }

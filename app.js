@@ -43,6 +43,7 @@ const stripePaymentRoute = require("./src/routes/stripePaymentRoute");
 const pdfTemplate = require("./src/documents/pdfTemplate");
 const bookingRoute = require("./src/routes/bookingRoute");
 const reviewRoute = require("./src/routes/reviewRoute"); 
+const profileRoute = require("./src/routes/profileRoute"); 
 
 
 app.use("/api", userRoute);
@@ -50,7 +51,10 @@ app.use("/api", frontendRoute);
 app.use("/api", propertyRoute);
 app.use("/api", stripePaymentRoute);
 app.use("/api", bookingRoute);
-app.use("/api",reviewRoute)
+app.use("/api",reviewRoute);
+app.use("/api", profileRoute);
+
+
 
 // pdf generate and fetch from client
 app.post("/api/create-pdf", (req, res) => {
