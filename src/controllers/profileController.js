@@ -68,6 +68,71 @@ exports.addIncomeInfo = async (req, res) => {
  }
 };
 
+
+// const express = require('express');
+const multer = require('multer');
+// const mongoose = require('mongoose');
+// const Schema = mongoose.Schema;
+
+const upload = multer({ dest: 'uploads/' });
+
+const yourSchema = new Schema({
+  name: String,
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  file: Buffer
+});
+
+const YourModel = mongoose.model('YourModel', yourSchema);
+
+mongoose.connect('mongodb://localhost/yourDatabase', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  const yourObject = new YourModel({
+    name: req.body.name,
+    email: req.body.email,
+    file: req.file.buffer
+  });
+  yourObject.save((err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error occurred while saving the object to MongoDB');
+    } else {
+      res.status(200).send('Object saved successfully to MongoDB');
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 exports.addAdressHistoryInfo = async (req, res) => {
   const { userId, values }=req.body;
  //const { userId } = req.body;
