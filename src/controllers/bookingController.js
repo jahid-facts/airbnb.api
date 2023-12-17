@@ -1,5 +1,5 @@
 const Booking = require("../models/bookingModel");
-const User = require("../models/userModel");
+const User = require("../models/userModel/userModel");
 const Payment = require("../models/paymentModel");
 const Property = require("../models/propertyModel");
 
@@ -89,6 +89,43 @@ exports.getRenterBookingData = async (req, res) => {
 }
 
 
+exports.getActiveRentingData = async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const data = await Booking.find({
+      renterUserId: userId,
+      checkoutDate: { $gt: new Date() }, // only show bookings with checkout date in the future
+      reviewStatus: { $ne: "reviewed" }, // exclude bookings with reviewed status
+    })
+      .populate("propertyId", "title address.addressLine1 address.city address.state address.postalCode images") // populate property fields including images
+      .select({
+        _id: 1,
+        stayDays: 1,
+        propertyId: 1,
+        reviewStatus: 1,
+      });
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    console.log(err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.updatebookingStatus = async (req, res) => {
   const { bookingId } = req.body;
@@ -128,6 +165,23 @@ exports.deleteBooking = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

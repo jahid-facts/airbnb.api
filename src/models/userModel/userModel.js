@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const personalInfoSchema = require("./personalInfo");
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,7 +30,10 @@ const userSchema = new mongoose.Schema(
         required: true,
       },
     },
-    personalInfo:{},
+    personalInfo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PersonalInfo",
+    },
     role: {
       type: String,
       default: "user",

@@ -1,5 +1,5 @@
 const Income = require("../models/fileModel");
-const User = require("../models/userModel");
+const User = require("../models/userModel/userModel");
 
 
 exports.personalInfoRouter = async (req, res) => {
@@ -46,31 +46,53 @@ exports.addAboutInfo = async (req, res) => {
  };
 
 
-
+//  const multer = require('multer');
+//  const storage = multer.diskStorage({
+//    destination: function (req, file, cb) {
+//      cb(null, 'uploads/')
+//    },
+//  });
+//  const upload = multer({ storage: storage });
+//  const bufferSchema = require('mongoose-buffer').bufferSchema;
+//  const Buffer = require('mongoose-buffer').types.Buffer;
+//  const mongooseBufferPlugin = require('mongoose-buffer').plugin;
+//  const mongoose = require('mongoose');
+//  mongoose.plugin(mongooseBufferPlugin);
+ 
+//  // Create a new instance of the Income model with a `file` field of type `Buffer` using the `bufferSchema` provided by `mongoose-buffer` package
+//  const newIncome = new Income({
+//    incomeSource: values.incomeSource,
+//    officeName: values.officeName,
+//    workplaceLocation: values.workplaceLocation,
+//    file: Buffer(fs.readFileSync(req.file.path)), // Read the uploaded file and save it as a Buffer object to the `file` field of the new income document
+//  });
 
 //  /income-info
-exports.addIncomeInfo = async (req, res) => {
+exports.addIncomeInfo =  async (req, res) => {
   const { userId, values }=req.body;
  //const { userId } = req.body;
+ const { incomeSource, officeName, workplaceLocation, file } = values;
 
- console.log(values);
-// Create a new instance of the Income model
-const newIncome = new Income({
-  incomeSource: values.incomeSource,
-  officeName: values.officeName,
-  workplaceLocation: values.workplaceLocation,
-  file: {
-    data: values.file.data,
-    contentType: values.file.contentType
-  }
-});
-
+ // Create a new instance of the Income model
+ const newIncome = new Income({
+   incomeSource,
+   officeName,
+   workplaceLocation,
+   file: {
+     data: file.buffer, // Convert the Buffer from the File object to a binary data string
+     contentType: file.mimetype, // Set the content type based on the file's MIME type
+   },
+ });
+ 
  try {
-   const mongores = await User.findByIdAndUpdate(
-       userId,
-       { $set: { "personalInfo.incomeSources": newIncome } },
-       { new: false },
-   );
+   const mongores = await User.findByIdAndUpdate(userId, { $set: { incomeSources: newIncome } }, { new: false });
+
+//  try {
+//    const mongores = await User.findByIdAndUpdate(
+//        userId,
+//        { $set: { "personalInfo.incomeSources": newIncome } },
+//        { new: false },
+//    );
    
    res
      .status(200).send('Object saved successfully to MongoDB')
