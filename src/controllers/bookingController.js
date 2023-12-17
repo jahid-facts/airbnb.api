@@ -68,7 +68,7 @@ exports.getRenterBookingData = async (req, res) => {
       renterUserId: userId, 
       // reviewStatus: { $ne: "reviewed" },
     })
-      .populate("propertyId", "title address.addressLine1 images") // populate property fields  images
+      .populate("propertyId", "title address.addressLine1 address.city address.state address.postalCode images") // populate property fields  images
       //.lean() // return plain JavaScript object instead of mongoose document
       .select({
         _id:1,

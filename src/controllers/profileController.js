@@ -1,4 +1,6 @@
+const Income = require("../models/fileModel");
 const User = require("../models/userModel");
+
 
 exports.personalInfoRouter = async (req, res) => {
    const { userId, values }=req.body;
@@ -24,7 +26,7 @@ exports.personalInfoRouter = async (req, res) => {
 
 exports.addAboutInfo = async (req, res) => {
     const { userId, values }=req.body;
-   //const { userId } = req.body;
+  //  const { userId } = req.body;
    console.log(userId);
    try {
      const mongores = await User.findByIdAndUpdate(
@@ -50,17 +52,51 @@ exports.addAboutInfo = async (req, res) => {
 exports.addIncomeInfo = async (req, res) => {
   const { userId, values }=req.body;
  //const { userId } = req.body;
+
+ console.log(values);
+// Create a new instance of the Income model
+const newIncome = new Income({
+  incomeSource: values.incomeSource,
+  officeName: values.officeName,
+  workplaceLocation: values.workplaceLocation,
+  file: {
+    data: values.file.data,
+    contentType: values.file.contentType
+  }
+});
+
+ try {
+   const mongores = await User.findByIdAndUpdate(
+       userId,
+       { $set: { "personalInfo.incomeSources": newIncome } },
+       { new: false },
+   );
+   
+   res
+     .status(200).send('Object saved successfully to MongoDB')
+     .json({ message: "Server returned Saved, addIncomeInfo", mongores });
+ } catch (err) {
+   console.error(err);
+   console.log(err.message);
+   res.status(500).json({ message: "Internal server error" });
+ }
+};
+
+// /address-info
+exports.addressHistoryInfo = async (req, res) => {
+  const { userId, values }=req.body;
+//  const { userId } = req.body;
  console.log(userId);
  try {
    const mongores = await User.findByIdAndUpdate(
        userId,
-       { $set: { "personalInfo.incomeSources": values } },
+       { $set: { "personalInfo.addressHistory": values } },
        { new: false },
    );
 
    res
      .status(200)
-     .json({ message: "Server returned Saved, updatePersonalInfo", mongores });
+     .json({ message: "Server returned Saved, addressHistoryInfo", mongores });
  } catch (err) {
    console.error(err);
    console.log(err.message);
@@ -69,44 +105,51 @@ exports.addIncomeInfo = async (req, res) => {
 };
 
 
-// const express = require('express');
-const multer = require('multer');
-// const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
 
-const upload = multer({ dest: 'uploads/' });
+// /emergency-info
+exports.emergencyContactInfo = async (req, res) => {
+  const { userId, values }=req.body;
+//  const { userId } = req.body;
+ console.log(userId);
+ try {
+   const mongores = await User.findByIdAndUpdate(
+       userId,
+       { $set: { "personalInfo.emergencyContact": values } },
+       { new: false },
+   );
 
-const yourSchema = new Schema({
-  name: String,
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  file: Buffer
-});
+   res
+     .status(200)
+     .json({ message: "Server returned Saved, emergencyContactInfo", mongores });
+ } catch (err) {
+   console.error(err);
+   console.log(err.message);
+   res.status(500).json({ message: "Internal server error" });
+ }
+};
 
-const YourModel = mongoose.model('YourModel', yourSchema);
 
-mongoose.connect('mongodb://localhost/yourDatabase', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('Error connecting to MongoDB:', err));
 
-app.post('/upload', upload.single('file'), (req, res) => {
-  const yourObject = new YourModel({
-    name: req.body.name,
-    email: req.body.email,
-    file: req.file.buffer
-  });
-  yourObject.save((err) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send('Error occurred while saving the object to MongoDB');
-    } else {
-      res.status(200).send('Object saved successfully to MongoDB');
-    }
-  });
-});
+
+
+
+
+
+
+
+// const yourSchema = new Schema({
+//   name: String,
+//   email: {
+//     type: String,
+//     required: true,
+//     unique: true
+//   },
+//   file: Buffer
+// });
+
+// const YourModel = mongoose.model('YourModel', yourSchema);
+
+
 
 
 
