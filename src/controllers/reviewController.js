@@ -4,11 +4,6 @@ const Booking = require("../models/bookingModel");
 const today = new Date(); // Get today's date
 
 exports.storeReviews = async (req, res) => {
-  // const { review } = req.body;
-  // console.log(review, "------");
-  //   propertyId,review, rating
-
-  // overAllRating =
 
   overAllRating =
     (req.body.CommunicationRating +
@@ -77,7 +72,7 @@ exports.getReview = async (req, res) => {
 
 
     const totalResults = await Reviews.countDocuments({ propertyId });
-      const mongores = await Reviews.find({ propertyId })
+      const mongores = await Reviews.find({ propertyId }).populate("reviewedBy", "name avatar")
         .limit(limit)
         .skip(offset);
         console.log(mongores);

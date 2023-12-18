@@ -90,10 +90,10 @@ exports.getRenterBookingData = async (req, res) => {
 
 
 exports.getActiveRentingData = async (req, res) => {
-  const { userId } = req.query;
+  const { renterId } = req.query;
   try {
     const data = await Booking.find({
-      renterUserId: userId,
+      renterUserId: renterId,
       checkoutDate: { $gt: new Date() }, // only show bookings with checkout date in the future
       reviewStatus: { $ne: "reviewed" }, // exclude bookings with reviewed status
     })
