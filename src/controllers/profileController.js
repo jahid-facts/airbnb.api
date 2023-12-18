@@ -2,6 +2,31 @@ const Income = require("../models/fileModel");
 const User = require("../models/userModel/userModel");
 
 
+exports.uploadAvatar =  async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    console.log(user)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    //user.avatar.url = imageUrl;
+    user.avatar = {
+      name: req.file.name,
+      url: imageUrl,
+    };
+    await user.save();
+    res.status(200).json(user);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+},
+
+
+
 exports.personalInfoRouter = async (req, res) => {
    const { userId, values }=req.body;
   //const { userId } = req.body;
