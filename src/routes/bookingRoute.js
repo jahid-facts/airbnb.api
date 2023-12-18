@@ -1,6 +1,6 @@
 const express = require("express");
 const { getBookingData ,getRenterBookingData,
-    getActiveRentingData,
+    getActiveRentingData,getUpcomingRentingData,
      updatebookingStatus , deleteBooking } = require("../controllers/bookingController");
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.get("/booking-data", getBookingData);
 router.post("/booking-status-update", updatebookingStatus);
 router.get("/renter-bookins", getRenterBookingData);
 router.get("/active-bookins", getActiveRentingData);
+router.get("/upcoming-bookins", getUpcomingRentingData);
 router.post("/booking-delete", deleteBooking);
 
 module.exports = router;

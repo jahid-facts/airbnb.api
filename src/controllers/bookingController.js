@@ -94,7 +94,8 @@ exports.getActiveRentingData = async (req, res) => {
   try {
     const data = await Booking.find({
       renterUserId: renterId,
-      checkoutDate: { $gt: new Date() }, // only show bookings with checkout date in the future
+      startDate: { $lte: new Date() }, // only show bookings with checkin date in the past or today
+      endDate: { $gte: new Date() }, // only show bookings with checkout date in the future or today
       reviewStatus: { $ne: "reviewed" }, // exclude bookings with reviewed status
     })
       .populate("propertyId", "title address.addressLine1 address.city address.state address.postalCode images") // populate property fields including images
@@ -114,6 +115,28 @@ exports.getActiveRentingData = async (req, res) => {
 
 
 
+exports.getUpcomingRentingData = async (req, res) => {
+  const { renterId } = req.query;
+  try {
+    const data = await Booking.find({
+      renterUserId: renterId,
+      startDate: { $gt: new Date() }, 
+      reviewStatus: { $ne: "reviewed" }, // exclude bookings with reviewed status
+    })
+      .populate("propertyId", "title address.addressLine1 address.city address.state address.postalCode images") // populate property fields including images
+      .select({
+        _id: 1,
+        stayDays: 1,
+        propertyId: 1,
+        reviewStatus: 1,
+      });
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    console.log(err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 
