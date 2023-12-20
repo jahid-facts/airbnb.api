@@ -12,6 +12,7 @@ const {
   resetPasswordPage,
   checkUserOTP,
   changeUserPassword,
+  socialLoginSingUp,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/auth");
 const {
@@ -36,6 +37,7 @@ router.post("/logout", authMiddleware, logoutUser);
 router.put("/update/:id", updateUser);
 router.get("/users", getAllUser);
 router.get("/user/:id", getUserById);
+router.post("/social-login-singup", socialLoginSingUp);
 
 
 router.get("/students", studentController);

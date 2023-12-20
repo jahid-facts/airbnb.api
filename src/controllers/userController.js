@@ -178,6 +178,43 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
+// user login
+
+exports.socialLoginSingUp = async (req, res, next) => {
+  const { email, name, picture } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      const user = await User.create({
+        name,
+        email,
+        role: "user",
+        password: "$%",
+        avatar: {
+          public_id: "avatar/1",
+          url: picture,
+        },
+        isEmailVerified: true,
+      });
+    }
+
+    const userInfo = await User.findOne({ email }).select("-password");
+    const payload = {
+      userInfo,
+    };
+
+    const token = jwtToken(payload);
+
+    return resReturn(res, 200, { token: token, message: "Login successfully" });
+  } catch (error) {
+    return resReturn(res, 500, {
+      error: error.message,
+    });
+  }
+};
+
 // user find by ID
 
 exports.getUserById = async (req, res, next) => {
