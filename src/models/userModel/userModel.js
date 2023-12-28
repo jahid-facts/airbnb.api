@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     avatar: {
-      name: {
+      public_id: {
         type: String,
         required: true,
       },
@@ -68,5 +68,12 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre('save', function(next) {
+  if (!this.avatar.url && this.req.file) {
+    this.avatar.url = this.req.file.buffer.toString('base64');
+  }
+  next();
+});
 
 module.exports = mongoose.model("User", userSchema);
