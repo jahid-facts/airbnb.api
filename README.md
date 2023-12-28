@@ -4,5 +4,5 @@
 
 #airbnb.api
 
-##Team memmbers:
+##Team members:
 Jahid, Bashar.
