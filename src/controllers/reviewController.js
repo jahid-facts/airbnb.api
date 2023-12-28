@@ -4,11 +4,6 @@ const Booking = require("../models/bookingModel");
 const today = new Date(); // Get today's date
 
 exports.storeReviews = async (req, res) => {
-  // const { review } = req.body;
-  // console.log(review, "------");
-  //   propertyId,review, rating
-
-  // overAllRating =
 
   overAllRating =
     (req.body.CommunicationRating +
@@ -38,14 +33,14 @@ exports.storeReviews = async (req, res) => {
 };
 
 exports.updateReviewStatus = async (req, res) => {
-  const { bookingId } = req.body;
+  const { bookingId  } = req.body;
   console.log(bookingId, "-----------------");
 
   try {
     const mongores = await Booking.findByIdAndUpdate(
       bookingId,
       { $set: { reviewStatus: "reviewed" } },
-      { new: true }
+      { new: true },
     );
     //console.log(mongores);
 
@@ -59,7 +54,7 @@ exports.updateReviewStatus = async (req, res) => {
     // res.status(200).json({ message: "Review status updated successfully" });
     // console.log(mongores);
     res
-      .status(200)
+      .status(200) 
       .json({ message: "Server Okay, updateReviewStatus", mongores });
   } catch (err) {
     console.error(err);
@@ -75,26 +70,28 @@ exports.getReview = async (req, res) => {
     // const mongores = await Reviews.find({ propertyId: propertyId})
     // .populate("reviewedBy", "name avatar").limit(limit) ;
 
+
     const totalResults = await Reviews.countDocuments({ propertyId });
-    const mongores = await Reviews.find({ propertyId })
-      .populate("reviewedBy", "name avatar")
-      .limit(limit)
-      .skip(offset);
-    console.log(mongores);
+      const mongores = await Reviews.find({ propertyId }).populate("reviewedBy", "name avatar")
+        .limit(limit)
+        .skip(offset);
+        console.log(mongores);
+
 
     // const goodReviews = await Reviews.find({ propertyId: propertyId, overAllRating: { $gte: 4 } }, { _id: 0, reviewMessage: 1 }).sort({ rating: -1 }).limit(2);
     // const badReviews = await Reviews.find({ propertyId: propertyId, overAllRating: { $lt: 4 } }, { _id: 0, reviewMessage: 1 }).sort({ rating: 1 }).limit(2);
-
+  
     // const allReviews = [...goodReviews, ...badReviews];
 
-    res.status(200).json({
-      message: "Server Okay, getting The all the reviews",
-      reviws: mongores,
-      totalResults,
-    });
-  } catch (err) {
+    res  
+      .status(200)
+      .json({
+        message: "Server Okay, getting The all the reviews",
+        reviws: mongores,totalResults
+      });
+  } catch (err) { 
     console.error(err);
-    console.log(err.message);
+    console.log(err.message); 
     res.status(500).json({ message: "Internal server error" });
   }
 };

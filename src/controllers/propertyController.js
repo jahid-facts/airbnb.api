@@ -1,5 +1,5 @@
 const AllProperty = require("../models/propertyModel");
-const User = require("../models/userModel");
+const User = require("../models/userModel/userModel");
 const Wishlists = require("../models/wishlistModel");
 const { resReturn } = require("../utils/responseHelpers");
 

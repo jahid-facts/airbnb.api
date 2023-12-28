@@ -1,5 +1,5 @@
 const Booking = require("../models/bookingModel");
-const User = require("../models/userModel");
+const User = require("../models/userModel/userModel");
 const Payment = require("../models/paymentModel");
 const Property = require("../models/propertyModel");
 
@@ -13,12 +13,12 @@ exports.getBookingData = async (req, res) => {
     const data = await Booking.find({
       hostUserId: userId,
       // propertyId: propertyId,
-      // startDate: {
-      //   $lte: today,
-      // },
-      // endDate: { 
-      //   $gte: today,
-      // },
+      startDate: {
+        $lte: today,
+      },
+      endDate: { 
+        $gte: today,
+      },
     })
       .populate("paymentId", "status createdAt") // populate payment collection fields using
       .populate("propertyId", "title  address.addressLine1 images") // populate property fields  images
@@ -38,7 +38,7 @@ exports.getBookingData = async (req, res) => {
         renterEmail: 1, 
         paymentId: 1,
         propertyId: 1,
-       
+        status: 1,
       });
 
     res.json(data);
@@ -89,6 +89,66 @@ exports.getRenterBookingData = async (req, res) => {
 }
 
 
+exports.getActiveRentingData = async (req, res) => {
+  const { renterId } = req.query;
+  try {
+    const data = await Booking.find({
+      renterUserId: renterId,
+      startDate: { $lte: new Date() }, // only show bookings with checkin date in the past or today
+      endDate: { $gte: new Date() }, // only show bookings with checkout date in the future or today
+      reviewStatus: { $ne: "reviewed" }, // exclude bookings with reviewed status
+    })
+      .populate("propertyId", "title address.addressLine1 address.city address.state address.postalCode images") // populate property fields including images
+      .select({
+        _id: 1,
+        stayDays: 1,
+        propertyId: 1,
+        reviewStatus: 1,
+      });
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    console.log(err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+exports.getUpcomingRentingData = async (req, res) => {
+  const { renterId } = req.query;
+  try {
+    const data = await Booking.find({
+      renterUserId: renterId,
+      startDate: { $gt: new Date() }, 
+      reviewStatus: { $ne: "reviewed" }, // exclude bookings with reviewed status
+    })
+      .populate("propertyId", "title address.addressLine1 address.city address.state address.postalCode images") // populate property fields including images
+      .select({
+        _id: 1,
+        stayDays: 1,
+        propertyId: 1,
+        reviewStatus: 1,
+      });
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    console.log(err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.updatebookingStatus = async (req, res) => {
   const { bookingId } = req.body;
@@ -128,6 +188,23 @@ exports.deleteBooking = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
