@@ -1,5 +1,6 @@
 # Stage 2: Build Node.js Server
-FROM node:20.9.0 as node-server-builder
+# FROM node:20.9.0 as node-server-builder
+FROM node:alpine
 
 # Set the working directory
 WORKDIR /usr/src/app
