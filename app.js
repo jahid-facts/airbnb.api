@@ -13,20 +13,19 @@ require("dotenv").config();
 const app = express();
 
 // Set up port for the server
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5050;
 
 // Set up database connection URL
 const dbURL =
   process.env.MONGODB_URL ||
-  // "mongodb+srv://ipsita:Ipsita%402023@uk-bd0.u3pngqk.mongodb.net/airbnb";
   "mongodb+srv://ukbd:MNjqO714lSWx6le5@uk-bd-00.kt2fhlb.mongodb.net/uk-bd";
 
 // Use CORS middleware
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: "http://localhost:3009",
     methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
-    credentials: true, // Allow cookies to be sent along with requests
+    credentials: true,
   })
 );
 
@@ -42,19 +41,16 @@ const propertyRoute = require("./src/routes/propertyRoute");
 const stripePaymentRoute = require("./src/routes/stripePaymentRoute");
 const pdfTemplate = require("./src/documents/pdfTemplate");
 const bookingRoute = require("./src/routes/bookingRoute");
-const reviewRoute = require("./src/routes/reviewRoute"); 
-const profileRoute = require("./src/routes/profileRoute"); 
-
+const reviewRoute = require("./src/routes/reviewRoute");
+const profileRoute = require("./src/routes/profileRoute");
 
 app.use("/api", userRoute);
 app.use("/api", frontendRoute);
 app.use("/api", propertyRoute);
 app.use("/api", stripePaymentRoute);
 app.use("/api", bookingRoute);
-app.use("/api",reviewRoute);
+app.use("/api", reviewRoute);
 app.use("/api", profileRoute);
-
-
 
 // pdf generate and fetch from client
 app.post("/api/create-pdf", (req, res) => {

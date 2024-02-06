@@ -12,6 +12,7 @@ const {
   resetPasswordPage,
   checkUserOTP,
   changeUserPassword,
+  socialLoginSignup,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/auth");
 
@@ -25,6 +26,7 @@ const {
 
 const router = express.Router();
 
+router.post("/social-login-singup", socialLoginSignup);
 router.post("/register", registerUser);
 router.post("/verify-otp", verifyOTP);
 router.post("/resend-otp", resendOTP);
